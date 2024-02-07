@@ -24,9 +24,9 @@ export const Navbar = () => {
    </div>
    <div class="collapse navbar-collapse Icon1 d-flex justify-content-around" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-item nav-link text-white m-3" href="#">Trekker&nbsp;</a>
-      <a class="nav-item nav-link text-white m-3" href="#">&nbsp; &nbsp;Guide&nbsp;&nbsp;</a>
-      <a class="nav-item nav-link text-white m-3" href="#">&nbsp;Register</a>
+      <a class="nav-item nav-link text-white m-3" href="/trekkerlogin">Trekker&nbsp;</a>
+      <a class="nav-item nav-link text-white m-3" href="/guidelogin">&nbsp; &nbsp;Guide&nbsp;&nbsp;</a>
+      <a class="nav-item nav-link text-white m-3" href="/signup">&nbsp;Sign Up&nbsp;</a>
     </div>
   </div>
 </nav>
