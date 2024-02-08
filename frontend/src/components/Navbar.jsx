@@ -5,28 +5,28 @@ import Trailways_Logo from '../images/Trailways_Logo.png';
 export const Navbar = () => {
   return (
 <>
-<nav class="navbar navbar-expand-lg navbar-light">
-          <div class="Icon">
-                { <img alt="logo"class="logo" src= {Trailways_Logo}/> }
+<nav className="navbar navbar-expand-lg navbar-light">
+          <div className="Icon">
+                { <img alt="logo"className="logo" src= {Trailways_Logo}/> }
             </div>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+  <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span className="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse menubar d-flex justify-content-around" id="navbarNavAltMarkup">
-    <div class="navbar-nav ">
-      <a class="nav-item nav-link text-white m-4" href="/">Home</a>
-      <a class="nav-item nav-link text-white m-4" href="/guidebook">Guide Book</a>
-      <a class="nav-item nav-link text-white m-4" href="/treklist">Treks</a>
-      <a class="nav-item nav-link text-white m-4" href='/price'>Pricing</a>
-      <a class="nav-item nav-link text-white m-4" href="/contact">Contact Us</a>
-      <a class="nav-item nav-link text-white m-4" href="/help">Help</a>
+  <div className="collapse navbar-collapse menubar d-flex justify-content-around" id="navbarNavAltMarkup">
+    <div className="navbar-nav ">
+      <a className="nav-item nav-link text-white m-4" href="/">Home</a>
+      <a className="nav-item nav-link text-white m-4" href="/guidebook">Guide Book</a>
+      <a className="nav-item nav-link text-white m-4" href="/treklist">Treks</a>
+      <a className="nav-item nav-link text-white m-4" href='/price'>Pricing</a>
+      <a className="nav-item nav-link text-white m-4" href="/contact">Contact Us</a>
+      <a className="nav-item nav-link text-white m-4" href="/help">Help</a>
     </div>
    </div>
-   <div class="collapse navbar-collapse Icon1 d-flex justify-content-around" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-      <a class="nav-item nav-link text-white m-3" href="/trekkerlogin">Trekker&nbsp;</a>
-      <a class="nav-item nav-link text-white m-3" href="/guidelogin">&nbsp; &nbsp;Guide&nbsp;&nbsp;</a>
-      <a class="nav-item nav-link text-white m-3" href="/signup">&nbsp;Sign Up&nbsp;</a>
+   <div className="collapse navbar-collapse Icon1 d-flex justify-content-around" id="navbarNavAltMarkup">
+    <div className="navbar-nav">
+      <a className="nav-item nav-link text-white m-3" href="/trekkerlogin">Trekker&nbsp;</a>
+      <a className="nav-item nav-link text-white m-3" href="/guidelogin">&nbsp; &nbsp;Guide&nbsp;&nbsp;</a>
+      <a className="nav-item nav-link text-white m-3" href="/signup">&nbsp;Sign Up&nbsp;</a>
     </div>
   </div>
 </nav>

@@ -1,0 +1,15 @@
+[
+    {
+      "id": 1,
+      "imageUrl": "https://images.prismic.io/indiahike/477a63c2-30c4-44a8-a804-04e012357170_Brahmatal_BT_Indiahikes_Jothiranjan_Jhandi+top_Spring_Mt.Trisul+and+Mt.Nanda+Ghunti_.jpg?auto=compress,format",
+      "title": "Image 1",
+      "description": "Description for Image 1"
+    },
+    {
+      "id": 2,
+      "imageUrl": "https://images.prismic.io/indiahike/477a63c2-30c4-44a8-a804-04e012357170_Brahmatal_BT_Indiahikes_Jothiranjan_Jhandi+top_Spring_Mt.Trisul+and+Mt.Nanda+Ghunti_.jpg?auto=compress,format",
+      "title": "Image 2",
+      "description": "Description for Image 2"
+    }
+]
+  
