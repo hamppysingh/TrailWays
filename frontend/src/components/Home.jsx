@@ -7,7 +7,9 @@ export const Home = () => {
     <>
         <Navbar></Navbar>
         <Carousel></Carousel>
-        <img alt="Random image" src="https://source.unsplash.com/random/1920×1080/?nature,adventure,trekking,bagpacking"></img>
+        <div className=' d-flex'>
+          <img alt="Random" src="https://source.unsplash.com/random/1920×1080/?nature,mountains,forest"></img>
+        </div>
     </>
   )
 }

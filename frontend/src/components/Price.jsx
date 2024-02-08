@@ -148,6 +148,20 @@ export const Price = () => {
           </div>
         </div>
       </div>
+      <br/>
+      <div class="card text-center">
+  <div class="card-header">
+    No Discount
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Free Account</h5>
+    <p class="card-text">   You will not be able to book Blue Level Guides and no additional feature will be provided !!!</p>
+    <a href="/signup" class="btn btn-secondary free">SIGN UP</a>
+  </div>
+  <div class="card-footer text-muted">
+    Thank You For Your Time!!!
+  </div>
+  </div>
     </>
   );
 };

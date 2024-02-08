@@ -7,7 +7,7 @@ export const Navbar = () => {
 <>
 <nav class="navbar navbar-expand-lg navbar-light">
           <div class="Icon">
-                { <img class="logo" src= {Trailways_Logo}/> }
+                { <img alt="logo"class="logo" src= {Trailways_Logo}/> }
             </div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
