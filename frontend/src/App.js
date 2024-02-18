@@ -6,6 +6,9 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 import { Home } from './components/Home';
 import {Price} from './components/Price';
 import { Contact } from "./components/Contact";
+import { Signup } from "./components/Signup";
+import { Trekkersignup } from "./components/Trekkersignup";
+import { Guidesignup } from "./components/Guidesignup";
 
 function App() {
   return (
@@ -14,6 +17,9 @@ function App() {
          <Route path='/' element={<Home/>}/>
          <Route path='/price' element={<Price/>}/>
          <Route path='/contact' element={<Contact/>}/>
+         <Route path='/signup' element={<Signup/>}/>
+         <Route path='/signup/trekker' element={<Trekkersignup/>}/>
+         <Route path='/signup/guide' element={<Guidesignup/>}/>
        </Routes>
      </BrowserRouter>
 
