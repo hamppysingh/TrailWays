@@ -37,7 +37,15 @@ export const TrekDetails = () => {
         <div>
             <h1 style={{color: "green"}}>Overview</h1>
             <p>{cardDetails.description}</p>
+<<<<<<< HEAD
             <Button variant="success"><a href={"/booking/${cardDetails.id}"} style={{color: "white", textDecoration: "none", width:"50px"}}>Book Now</a></Button>
+=======
+            <Button variant="success">
+            <a href={`/trekdetails/booking/${id}`} style={{color: "white", textDecoration: "none", width:"50px"}}>
+              Book Now
+            </a>
+            </Button>
+>>>>>>> a133f228c2b1b91ff09427ac27c28f9f4c6f9cf3
         </div>
     </>
   )

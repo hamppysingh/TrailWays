@@ -78,7 +78,11 @@ export const Home = ({card}) => {
           </em>
         </span>
       </h2>
+<<<<<<< HEAD
       <div style={{display: "flex", flexDirection: "column", justifyContent: "around"}}>
+=======
+      <div style={{display: "flex", justifyContent: "around"}}>
+>>>>>>> a133f228c2b1b91ff09427ac27c28f9f4c6f9cf3
         <Card/>
       </div>
     </>
