@@ -2,7 +2,6 @@ const express=require('express');
 const cors=require('cors');
 const routes=require('./routes/routes');
 const bodyparser=require('body-parser');
-
 const app=express();
 app.use(cors());
 app.use(bodyparser.urlencoded({extended:false}));
