@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const Card = ({card}) => {
   // const {id, imageUrl, title, description} = data;
+  
 
   return (
     <div
@@ -40,7 +41,7 @@ export const Card = ({card}) => {
                   <h5 className="card-title">{image.title}</h5>
                   <p className="card-text">{image.description}</p>
                 {/* <Button variant="success"><a href="/trekdetails/:id" style={{color: "white", textDecoration: "none", width:"50px"}}>Book Now</a></Button> */}
-                <Link to={`/trekdetails/${image.id}`} className="btn btn-success">Book Now</Link>
+                <Link to={`/booking/${id}`} className="btn btn-success">Book Now</Link>
                 </div>
               </div>
             </div>
