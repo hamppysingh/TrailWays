@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Navbar } from './Navbar';
 import { useNavigate} from 'react-router-dom';
 import { useAuth } from '../Hooks/AuthContext';
+import axios from 'axios';
 export const Trekkersignin = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [TrekkerData, setTrekkerData] = useState([]);
+  const [error, setError] = useState('');
 
-  
+  useEffect(
+      ()=>{
+          axios.get("http://localhost:9000/trekker")
+          .then((res)=>{setTrekkerData(res.data)})
+          .catch(err=>console.log(err));
+      },[]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prevCredentials) => ({
@@ -17,15 +26,23 @@ const { dispatch } = useAuth();
 const redirect = useNavigate();
 
 const handleSignIn = () => {
-  // Validate credentials and sign in logic
-  // ...
+    // Validate credentials and sign in logic
+    const { username, password } = credentials;
 
-  // On successful sign-in
-  dispatch({ type: 'LOGIN', payload: { username: credentials.username} });
+    // Find the Trekker in the data array with the entered username
+    const Trekker = TrekkerData.find((Trekker) => Trekker.Tre_Uname === username);
 
-  // Redirect to guide dashboard or other pages
-  redirect('/trekkerdash');
-};
+    if (Trekker && Trekker.Tre_Pass === password) {
+      // On successful sign-in
+      dispatch({ type: 'LOGIN', payload: { username: Trekker.Tre_Uname } });
+
+      // Redirect to Trekker dashboard or other pages
+      redirect('/trekkerdash');
+    } else {
+      // Handle authentication failure
+      setError('Invalid username or password');
+    }
+  };
   
     return (
         <>
@@ -64,6 +81,7 @@ const handleSignIn = () => {
           <button type="button" className="btn btn-primary" onClick={handleSignIn}>
             Sign In
           </button>
+          {error && <div className="text-danger">{error}</div>}
         </form>
       </div>
       </>

@@ -76,4 +76,47 @@ router.get('/guide',(req,res)=>{
     });
 });
 
+router.get('/admin',(req,res)=>{
+    connection.query("select * from admin",(err,data)=>{
+        if(err){
+            console.log(" error in finding data!! "+err);
+            res.json(err);
+        }
+        else{
+            console.log(data);
+            console.log("Executed Succesfully!!");
+            res.json(data);
+        }
+    });
+});
+
+router.get('/trekker',(req,res)=>{
+    connection.query("select * from trekker",(err,data)=>{
+        if(err){
+            console.log(" error in finding data!! "+err);
+            res.json(err);
+        }
+        else{
+            console.log(data);
+            console.log("Executed Succesfully!!");
+            res.json(data);
+        }
+    });
+});
+
+router.get('/trekkername',(req,res)=>{
+    connection.query("select Tre_Uname from trekker",(err,data)=>{
+        if(err){
+            console.log(" error in finding data!! "+err);
+            res.json(err);
+        }
+        else{
+            console.log(data);
+            console.log("Executed Succesfully!!");
+            res.json(data);
+        }
+    });
+});
+
+
 module.exports=router;

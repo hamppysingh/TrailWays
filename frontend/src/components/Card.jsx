@@ -38,7 +38,7 @@ export const Card = ({card}) => {
                 <div className="card-body">
                   <h5 className="card-title">{image.title}</h5>
                   <p className="card-text">{image.description}</p>
-                <Link to={`/trekdetails/${image.id}`} className="btn btn-success">Book Now</Link>
+                <Link to={`/trekdetails/${image.id}`} className="btn btn-success">See More</Link>
                 </div>
               </div>
             </div>

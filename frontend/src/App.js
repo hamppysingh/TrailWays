@@ -17,6 +17,7 @@ import TrekkerDash from './components/TrekkerDash';
 import SignOut from './components/SignOut';
 import { Adminsignin } from './components/Adminsignin';
 import AdminDash from './components/AdminDash';
+import { TrekList } from './components/TrekList';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/Trekkerdash" element={<TrekkerDash/>} />
           <Route path="/signout" element={<SignOut/>}/>
           <Route path="/admindash" element={<AdminDash/>}/>
+          <Route path="/treklist" element={<TrekList/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
