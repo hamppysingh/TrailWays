@@ -35,14 +35,19 @@ export const TrekDetails = () => {
   }, []);
 
   const GoBook = () => {
-    const isTrekker = TrekkerData.some((Trekker) => Trekker.Tre_Uname === user.username);
-
-    if (isTrekker) {
-      // If the user is a Trekker, allow navigation to the booking page
-      navigate(`/trekdetails/booking/${id}`);
+    if (user && user.username) {
+      const isTrekker = TrekkerData.some((Trekker) => Trekker.Tre_Uname === user.username);
+  
+      if (isTrekker) {
+        // If the user is a Trekker, allow navigation to the booking page
+        navigate(`/trekdetails/booking/${id}`);
+      } else {
+        // If the user is not a Trekker, show an alert
+        alert("Sorry, you can't do the booking, you are not a Trekker!!!");
+      }
     } else {
-      // If the user is not a Trekker, show an alert
-      alert("Sorry, you can't do the booking, you are not a Trekker!!!");
+      // If user or username is null, show an alert
+      alert("Sorry, you can't do the booking. Please log in to continue.");
     }
   };
 
