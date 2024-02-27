@@ -18,7 +18,6 @@ import SignOut from './components/SignOut';
 import { Adminsignin } from './components/Adminsignin';
 import AdminDash from './components/AdminDash';
 import { TrekList } from './components/TrekList';
-
 function App() {
   return (
     <AuthProvider>

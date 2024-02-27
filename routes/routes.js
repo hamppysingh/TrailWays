@@ -2,8 +2,9 @@ const express=require('express');
 const router=express.Router();
 router.use(express.json());
 const multer = require('multer');
+const path = require('path');
 var connection=require("../dbconnect/dbconnect");
-
+const fs = require('fs/promises');
 router.post("/signup/trekker",(req,res)=>{
     const result = [req.body.Tre_Uname,
         req.body.Tre_Name,
@@ -117,6 +118,98 @@ router.get('/trekkername',(req,res)=>{
         }
     });
 });
+router.get('/trekidname',(req,res)=>{
+    connection.query("select Td_Idname,Td_Trekname from trek_details",(err,data)=>{
+        if(err){
+            console.log(" error in finding data!! "+err);
+            res.json(err);
+        }
+        else{
+            console.log(data);
+            console.log("Executed Succesfully!!");
+            res.json(data);
+        }
+    });
+});
+router.post("/slotinsert", (req, res) => {
+    const result1 = [1];
+  
+    connection.query("SELECT COUNT(*) as guideCount FROM Guide WHERE `G_Avail` = ?", [result1], (err, data1) => {
+      if (err) {
+        console.log("Error in finding data!! " + err);
+        res.json(err);
+      } else {
+        const result = [
+          req.body.S_RandomSlot,
+          req.body.S_Slotdate,
+          data1[0].guideCount, // Replace blank space with guide count
+          req.body.S_Tdidname
+        ];
+  
+        const sql = "INSERT INTO slot (`S_RandomSlot`, `S_Slotdate`, `S_GuideAvail`, `S_Tdidname`) VALUES (?)";
+  
+        connection.query(sql, [result], (err, data) => {
+          if (err) {
+            console.log("Error in finding data!! " + err);
+            if (err.code === 'ER_DUP_ENTRY') {
+              res.status(500).json({ errno: 1062, message: 'Duplicate entry found' });
+            } else {
+              res.status(500).json(err);
+            }
+          } else {
+            console.log("Executed Successfully!!");
+            res.json(data);
+          }
+        });
+      }
+    });
+});
 
+router.post('/addTrek', async (req, res) => {
+    try {
+      // Read existing trek data
+      const filePath = path.join(__dirname, '../../TrailWays/frontend/src/images/images.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      const jsonData = JSON.parse(data);
+  
+      // Add new trek data
+      const newTrek = {
+        id: parseInt(req.body.Td_Idname),
+        imageUrl: req.body.imageUrl,
+        title: req.body.Td_Trekname,
+        description: req.body.description,
+        overview: req.body.overview,
+      };
+      const result=[req.body.Td_Idname, req.body.Td_Trekname, req.body.Td_Loc, req.body.Td_Difficulty, req.body.Td_Duration, parseFloat(req.body.Td_PerPrice)];
+      const sql = "insert into trek_details(`Td_Idname`,`Td_Trekname`,`Td_Loc`,`Td_Difficulty`,`Td_Duration`,`Td_PerPrice`) values(?)";
+      // Check for duplicate ID before adding
+      const existingTrek = jsonData.find((trek) => trek.id === newTrek.id);
+      if (existingTrek) {
+        return res.status(400).json({ error: 'Duplicate Trek ID found!' });
+      }
+  
+      jsonData.push(newTrek);
+  
+      // Write back to the JSON file
+      await fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf-8');
+      connection.query(sql, [result], (err, data) => {
+        if (err) {
+          console.log("Error in finding data!! " + err);
+          if (err.code === 'ER_DUP_ENTRY') {
+            res.status(500).json({ errno: 1062, message: 'Duplicate entry found' });
+          } else {
+            res.status(500).json(err);
+          }
+        } else {
+          console.log("Executed Successfully!!");
+          res.json(data);
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error adding trek data:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 module.exports=router;

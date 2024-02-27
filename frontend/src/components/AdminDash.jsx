@@ -1,9 +1,10 @@
-// GuideDash.js
+
 import React from 'react';
 import { useAuth } from '../Hooks/AuthContext';
 import { Navbar } from './Navbar';
 import { Link } from 'react-router-dom';
-
+import {SlotForm} from './SlotForm' ;
+import { TrekDetailsForm } from './TrekDetailsForm';
 const AdminDash = () => {
   const { state } = useAuth();
   const { user } = state;
@@ -23,11 +24,19 @@ const AdminDash = () => {
     <div>
       {user && (
         <div>
-          <h2>Welcome, {user.username}!</h2>
+        <div>
+          <h2 className='d-flex justify-content-center m-2' >Welcome, {user.username}!</h2>
           {/* Other dashboard content */}
         </div>
+        </div>
       )}
+
     </div>
+
+    <br/>
+    <SlotForm/>
+    <br/>
+    <TrekDetailsForm/>
     <br/>
     </>
   );
