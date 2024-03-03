@@ -3,6 +3,7 @@ const router=express.Router();
 router.use(express.json());
 const multer = require('multer');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 var connection=require("../dbconnect/dbconnect");
 const fs = require('fs/promises');
 router.post("/signup/trekker",(req,res)=>{
@@ -13,7 +14,6 @@ router.post("/signup/trekker",(req,res)=>{
         req.body.Tre_Adhaar,
         req.body.Tre_Pass,
         req.body.Tre_Dob] ;
-//    Tre_Image: null,
     const sql="insert into trekker(`Tre_Uname`,`Tre_Name`,`Tre_Email`,`Tre_Mobile`,`Tre_Adhaar`,`Tre_Pass`,`Tre_Dob`) values(?)"
         connection.query(sql,[result],(err,data)=>{
             if(err){
@@ -132,38 +132,30 @@ router.get('/trekidname',(req,res)=>{
     });
 });
 router.post("/slotinsert", (req, res) => {
-    const result1 = [1];
-  
-    connection.query("SELECT COUNT(*) as guideCount FROM Guide WHERE `G_Avail` = ?", [result1], (err, data1) => {
-      if (err) {
+        
+    const result = [
+        req.body.S_RandomSlot,
+        req.body.S_Slotdate,
+        req.body.S_Tdidname
+    ];
+
+    const sql = "INSERT INTO slot (`S_RandomSlot`, `S_Slotdate`, `S_Tdidname`) VALUES (?)";
+
+    connection.query(sql, [result], (err, data) => {
+        if (err) {
         console.log("Error in finding data!! " + err);
-        res.json(err);
-      } else {
-        const result = [
-          req.body.S_RandomSlot,
-          req.body.S_Slotdate,
-          data1[0].guideCount, // Replace blank space with guide count
-          req.body.S_Tdidname
-        ];
-  
-        const sql = "INSERT INTO slot (`S_RandomSlot`, `S_Slotdate`, `S_GuideAvail`, `S_Tdidname`) VALUES (?)";
-  
-        connection.query(sql, [result], (err, data) => {
-          if (err) {
-            console.log("Error in finding data!! " + err);
-            if (err.code === 'ER_DUP_ENTRY') {
-              res.status(500).json({ errno: 1062, message: 'Duplicate entry found' });
-            } else {
-              res.status(500).json(err);
-            }
-          } else {
-            console.log("Executed Successfully!!");
-            res.json(data);
-          }
-        });
-      }
+        if (err.code === 'ER_DUP_ENTRY') {
+            res.status(500).json({ errno: 1062, message: 'Duplicate entry found' });
+        } else {
+            res.status(500).json(err);
+        }
+        } else {
+        console.log("Executed Successfully!!");
+        res.json(data);
+        }
     });
 });
+
 
 router.post('/addTrek', async (req, res) => {
     try {
@@ -212,7 +204,7 @@ router.post('/addTrek', async (req, res) => {
     }
   });
   router.get('/slots/:id',(req,res)=>{
-    connection.query("select S_RandomSlot, S_Slotdate, S_Tdidname from slot where S_TdIdname = ?",req.params.id,(err,data)=>{
+    connection.query("select S_RandomSlot, S_Slotdate, S_Tdidname from slot where S_TdIdname = ? and S_Slotdate > CURDATE()",req.params.id,(err,data)=>{
         if(err){
             console.log(" error in finding data!! "+err);
             res.json(err);
@@ -225,17 +217,23 @@ router.post('/addTrek', async (req, res) => {
     });
 });
 router.get('/guidelicense',(req,res)=>{
-  connection.query("select `G_Uname`,`G_Name`,`GL_Color` from Guide G left join Guide_license Gl on G.G_Glno=Gl.Gl_lno where G.G_avail=1 order by Gl.GL_Color",(err,data)=>{
-      if(err){
-          console.log(" error in finding data!! "+err);
-          res.json(err);
-      }
-      else{
-          console.log(data);
-          console.log("Executed Succesfully!!");
-          res.json(data);
-      }
-  });
+    connection.query('CALL ResetGuideAvailability()', (error, results) => {
+        if (error) {
+          console.error('Error calling stored procedure:', error);
+        } else {
+            connection.query("select `G_Uname`,`G_Name`,`GL_Color` from Guide G left join Guide_license Gl on G.G_Glno=Gl.Gl_lno where G.G_avail=1 and Gl.GL_Valid >= CURDATE() order by Gl.GL_Color",(err,data)=>{
+                if(err){
+                    console.log(" error in finding data!! "+err);
+                    res.json(err);
+                }
+                else{
+                    console.log(data);
+                    console.log("Executed Succesfully!!");
+                    res.json(data);
+                }
+            });
+        }
+      });
 });
 router.get('/trekdetails/:id',(req,res)=>{
   connection.query("select * from trek_details where Td_Idname = ?",req.params.id,(err,data)=>{
@@ -250,14 +248,85 @@ router.get('/trekdetails/:id',(req,res)=>{
       }
   });
 });
+router.post('/bookings', (req, res) => {
+    const b = new Date();
+    const B_Bdate = b.toISOString().slice(0, 19).replace("T", " ");
+    const B_Randombid = uuidv4();
 
-router.post('/bookings',(req,res)=>{
+    const result = [
+        new Date(req.body.A_Slotdate).toISOString().slice(0, 19).replace("T", " "),
+        req.body.A_Totalpeople,
+        0,
+        req.body.A_TrekIdname,
+        req.body.A_Trekkeruname,
+        req.body.A_Guide,
+        B_Randombid
+    ];
 
-    
-    connection.query("select * from trek_details where Td_Idname = ?",req.params.id,(err,data)=>{
+    const book = [B_Randombid, B_Bdate, req.body.B_TotalAmount, "online"];
+
+    // Start a transaction
+    connection.beginTransaction(function (err) {
+        if (err) {
+            throw err;
+        }
+
+        // Insert into booking table
+        connection.query("INSERT INTO booking (`B_Randombid`, `B_Bdate`, `B_TotalAmount`, `B_paymethod`) VALUES (?)", [book], (err, data) => {
+            if (err) {
+                // Rollback on error
+                connection.rollback(function () {
+                    console.log("Error in inserting into booking table!! " + err);
+                    res.status(500).json(err);
+                });
+            } else {
+                // Insert into activity_pastdetails table
+                connection.query("INSERT INTO activity_pastdetails (`A_Date`, `A_Totalpeople`, `A_Guiderated`, `A_TrekIdname`, `A_Trekkeruname`, `A_Guideuname`, `A_Bookingid`) VALUES (?)", [result], (err, data) => {
+                    if (err) {
+                        // Rollback on error
+                        connection.rollback(function () {
+                            console.log("Error in inserting into activity_pastdetails table!! " + err);
+                            res.status(500).json(err);
+                        });
+                    } else {
+                        // Commit the transaction
+                        connection.commit(function (err) {
+                            if (err) {
+                                // Rollback on error
+                                connection.rollback(function () {
+                                    console.log("Error in committing transaction!! " + err);
+                                    res.status(500).json(err);
+                                });
+                            } else {
+                                // Release the connection
+                                console.log("Transaction completed successfully!!");
+                                res.json(data);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+});
+
+router.get('/trekkerprevious', (req, res) => {
+    connection.query("SELECT A.A_Randomid, A.A_Date, A.A_Totalpeople, T.Td_Trekname, G.G_Name, B.B_TotalAmount, A.A_Trekkeruname FROM activity_pastdetails A, guide G, Trek_details T, Booking B WHERE A.A_Guideuname=G.G_Uname AND A.A_TrekIdname=T.Td_Idname AND B.B_Randombid=A.A_Bookingid AND A.A_Date < CURDATE()",(err, data) => {
+        if (err) {
+            console.log("Error in finding data:", err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            console.log("Executed Successfully:", data);
+            res.json(data);
+        }
+    });
+});
+
+  router.get('/trekkerupcoming',(req,res)=>{
+    connection.query("select A.A_Randomid,A.A_Date,A.A_Totalpeople,T.Td_Trekname,G.G_Name,B.B_TotalAmount,A.A_Trekkeruname from activity_pastdetails A,guide G,Trek_details T,Booking B where A.A_Guideuname=G.G_Uname and A.A_TrekIdname=T.Td_Idname and B.B_Randombid=A.A_Bookingid and A.A_Date > curdate()",(err,data)=>{
         if(err){
             console.log(" error in finding data!! "+err);
-            res.json(err);
+            res.status(500).json({ error: 'Internal Server Error' });
         }
         else{
             console.log(data);
@@ -266,6 +335,31 @@ router.post('/bookings',(req,res)=>{
         }
     });
   });
-  
+
+router.get('/guideprevious', (req, res) => {
+    connection.query("select A.A_Randomid,A.A_Date,A.A_Totalpeople,T.Td_Trekname,Tr.Tre_name,B.B_TotalAmount,A.A_Guideuname from activity_pastdetails A,Trekker Tr,Trek_details T,Booking B where A.A_Trekkeruname=Tr.Tre_Uname and A.A_TrekIdname=T.Td_Idname and B.B_Randombid=A.A_Bookingid and A.A_Date < curdate()", (err, data) => {
+        if (err) {
+            console.log("Error in finding data:", err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            console.log("Executed Successfully:", data);
+            res.json(data);
+        }
+    });
+});
+
+  router.get('/guideupcoming',(req,res)=>{
+    connection.query("select A.A_Randomid,A.A_Date,A.A_Totalpeople,T.Td_Trekname,Tr.Tre_name,B.B_TotalAmount,A.A_Guideuname from activity_pastdetails A,Trekker Tr,Trek_details T,Booking B where A.A_Trekkeruname=Tr.Tre_Uname and A.A_TrekIdname=T.Td_Idname and B.B_Randombid=A.A_Bookingid and A.A_Date > curdate()",(err,data)=>{
+        if(err){
+            console.log(" error in finding data!! "+err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else{
+            console.log(data);
+            console.log("Executed Succesfully!!");
+            res.json(data);
+        }
+    });
+  });
 
 module.exports=router;
