@@ -105,7 +105,7 @@ export const Booking = () => {
       axios.post("http://localhost:9000/bookings", formData)
         .then((data) => {
           console.log(data);
-          redirect('/successrequest');
+          redirect('/successbooking');
         })
         .catch(err => {
           console.log(formData);
