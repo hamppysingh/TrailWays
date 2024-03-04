@@ -3,6 +3,10 @@ Guide Trekker Portal Hub
 
 A digital platform that serves as a central hub connecting guides and trekkers, facilitating outdoor adventure activities and providing resources and services related to trekking. It's a place where trekkers can find experienced guides for their adventures.
 
+Pre Requisites : 
+    1. MySQL - https://dev.mysql.com/downloads/mysql/
+    2. NodeJS - https://nodejs.org/en/download
+
 Steps for Database ( Open cmd promt or MySQL Command Line Client ) : 
 * cmd only
   1. mysql -u root -p : This command will open MySQL client on your Command Promt and then type the corresponding password ( basically for new user it is root123 if haven't changed )...
